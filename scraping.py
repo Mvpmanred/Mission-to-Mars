@@ -29,7 +29,7 @@ def scrape_all():
     return data
 
 
-## > SCRAPE MARS NEWS <
+## SCRAPE MARS NEWS
 
 def mars_news(browser):
 
@@ -63,9 +63,6 @@ def mars_news(browser):
 
     return news_title, news_p
 
-
-## > SCRAPE FEATURED IMAGES <
-
 def featured_image(browser):
 
     # Visit URL 
@@ -93,20 +90,16 @@ def featured_image(browser):
         # Find the relative image url 
         # The 'figure.lede' references the <figure /> tag and its class=lede
         # the 'a' is the next tag nested inside the <figure /> tag, as well as the 'img' tag 
-        # the .get('src') pulls the link to the image
+    
 
         # WE are telling soup to go to figure tag, then within that look for an 'a' tag then within that look for a 'img' tag
         img_url_rel= img_soup.select_one('figure.lede a img').get("src")
     
     except AttributeError:
         return None
-    # Need to get the FULL URL: Only had relative path before
+  
     img_url= f'https://www.jpl.nasa.gov{img_url_rel}'
-
     return img_url
-
-
-## > SCRAPE FACTS ABOUT MARS <
 
 def mars_facts():
     
@@ -127,30 +120,23 @@ def mars_facts():
     return df.to_html()
 
 
-## > SCRAPE HEMISPHERE <
+## HEMISPHERE
 
 def hemisphere(browser):
     url='https://marshemispheres.com/'
     browser.visit(url)
 
-
     hemisphere_image_urls = []
-
     imgs_links= browser.find_by_css("a.product-item h3")
-
-    for x in range(len(imgs_links)):
+for x in range(len(imgs_links)):
         hemisphere={}
-
-     
         browser.find_by_css("a.product-item h3")[x].click()
-
-       
         sample_img= browser.find_link_by_text("Sample").first
         hemisphere['img_url']=sample_img['href']
         hemisphere['title']=browser.find_by_css("h2.title").text
         hemisphere_image_urls.append(hemisphere)
         browser.back()
-    return hemisphere_image_urls
+return hemisphere_image_urls
 
 if __name__== "__main__":
     # If running as script, print scrapped data
